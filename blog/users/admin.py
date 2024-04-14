@@ -1,7 +1,14 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .models import User
 
-# Register your models here.
+
+# Define a new User admin
+class UserAdmin(BaseUserAdmin):
+    # Fieldsets and other configurations if needed
+    pass
+
+
+# Re-register UserAdmin
 admin.site.register(User, UserAdmin)

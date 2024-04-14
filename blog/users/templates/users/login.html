@@ -7,7 +7,7 @@
         <div class="col-md-6">
             <div class="mt-5 mb-5"> {# Добавляем отступы сверху и снизу #}
                 <h2 class="text-center">Вход в систему</h2>
-                <form method="post" action="{% url 'login' %}" class="mt-4">
+                <form method="post" action="{% url 'users:login' %}" class="mt-4">
                     {% csrf_token %}
                     {% for field in form %}
                     <div class="form-group">
