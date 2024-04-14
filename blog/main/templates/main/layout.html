@@ -21,12 +21,12 @@
             <div class="col-md-4 d-flex justify-content-end align-items-center">
                 {% if user.is_authenticated %}
                     <span class="mr-2">Привет, {{ user.username }}</span>
-                   <a href="{% url 'logout' %}" class="btn btn-secondary">
+                   <a href="{% url 'users:logout' %}" class="btn btn-secondary">
     <i class="fas fa-sign-out-alt"></i> Выход
 </a>
                 {% else %}
-                    <a href="{% url 'register' %}" class="btn btn-primary mr-2">Регистрация</a>
-                    <a href="{% url 'login' %}" class="btn btn-secondary">Вход</a>
+                    <a href="{% url 'users:register' %}" class="btn btn-primary mr-2">Регистрация</a>
+                    <a href="{% url 'users:login' %}" class="btn btn-secondary">Вход</a>
                 {% endif %}
             </div>
         </div>

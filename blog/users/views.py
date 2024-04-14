@@ -12,7 +12,7 @@ def register(request):
             new_user = form.save()
             new_user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
             auth_login(request, new_user)
-            return redirect('')  # замените '' на URL-шаблон, куда вы хотите перенаправить пользователя после входа
+            return redirect('post_list')  # замените '' на URL-шаблон, куда вы хотите перенаправить пользователя после входа
     else:
         form = CustomUserCreationForm()
     return render(request, 'users/register.html', {'form': form})
@@ -28,7 +28,7 @@ def login(request):
             if user is not None:
                 auth_login(request, user)
                 return redirect(
-                    '')  # Замените 'home' на имя URL-шаблона, на который хотите перенаправить пользователя после входа
+                    'post_list')  # Замените 'home' на имя URL-шаблона, на который хотите перенаправить пользователя после входа
             else:
                 form.add_error(None, 'Неверный логин или пароль')
     else:
@@ -38,4 +38,4 @@ def login(request):
 
 def logoutUser(request):
     logout(request)
-    return redirect('login')
+    return redirect('post_list')
