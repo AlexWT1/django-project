@@ -10,8 +10,8 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 def post_list(request):
     posts = Post.objects.all()
-    print(posts)  # Выводит объекты постов в консоль
-    return render(request, 'posts/post_list.html', {'posts': posts})
+    form = PostForm()
+    return render(request, 'posts/post_list.html', {'posts': posts, 'form': form , 'is_homepage': True,})
 
 
 def post_detail(request, pk):
@@ -27,74 +27,28 @@ def post_detail(request, pk):
                 return redirect('post_detail', pk=pk)
         else:
             form = CommentForm()
-        return render(request, 'posts/post_detail.html', {'post': post, 'comments': comments, 'form': form})
+        context = {
+            'post': post,
+            'comments': comments,
+            'form': form,
+            'is_homepage': False, # Устанавливаем is_homepage в False для детальных страниц постов
+        }
+        return render(request, 'posts/post_detail.html', context)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
-#
-#
-# @transaction.atomic
-# @login_required
-# def post_create(request):
-#     try:
-#         if request.method == 'POST':
-#             form = PostForm(request.POST, request.FILES)
-#             if form.is_valid():
-#                 post = form.save(commit=False)
-#                 post.author = request.user
-#                 post.save()
-#                 # После успешного создания поста перенаправляем на страницу с деталями этого поста
-#                 return redirect('post_detail', pk=post.pk)
-#         else:
-#             form = PostForm()
-#         return render(request, 'blog/post_form.html', {'form': form})
-#     except Exception as e:
-#         return JsonResponse({'error': str(e)}, status=500)
-#
-#
-# @transaction.atomic
-# @login_required
-# def post_edit(request, pk):
-#     post = get_object_or_404(Post, pk=pk)
-#     if post.author != request.user:
-#         return JsonResponse({'error': 'You are not authorized to edit this post.'}, status=403)
-#
-#     if request.method == 'POST':
-#         form = PostForm(request.POST, instance=post)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('post_detail', pk=post.pk)
-#     else:
-#         form = PostForm(instance=post)
-#     return render(request, 'blog/post_edit.html', {'form': form})
-#
-#
-# @transaction.atomic
-# @login_required
-# def post_delete(request, pk):
-#     post = get_object_or_404(Post, pk=pk)
-#     if post.author != request.user:
-#         return JsonResponse({'error': 'You are not authorized to delete this post.'}, status=403)
-#
-#     if request.method == 'POST':
-#         post.delete()
-#         return redirect('post_list')
-#     return render(request, 'blog/post_delete.html', {'post': post})
-#
-#
-# @transaction.atomic
-# @login_required  # Добавляем декоратор, чтобы убедиться, что пользователь аутентифицирован
-# def add_comment_to_post(request, pk):
-#     try:
-#         post = get_object_or_404(Post, pk=pk)
-#         if request.method == 'POST':
-#             form = CommentForm(request.POST)
-#             if form.is_valid():
-#                 comment = form.save(commit=False)
-#                 comment.post = post
-#                 comment.save()
-#                 return redirect('post_detail', pk=post.pk)
-#         else:
-#             form = CommentForm()
-#         return render(request, 'blog/add_comment_to_post.html', {'form': form})
-#     except Exception as e:
-#         return JsonResponse({'error': str(e)}, status=500)
+
+
+
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect('post_list')
+            # тут может быть перенаправление или другая логика
+    else:
+        form = PostForm()  # Создаем пустую форму для GET запроса
+    return render(request, 'main/layout.html', {'form': form})

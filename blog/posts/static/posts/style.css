@@ -1,0 +1,32 @@
+/* Стили для формы создания поста */
+.post-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.post-form input[type="text"],
+.post-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.post-form textarea {
+    height: 150px;
+}
+
+.post-form button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.post-form button[type="submit"]:hover {
+    background-color: #0056b3;
+}

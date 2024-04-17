@@ -1,0 +1,9 @@
+.page-container {
+    min-height: 100vh; /* Устанавливает минимальную высоту равной высоте экрана */
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1; /* Заставляет main занимать все доступное пространство между header и footer */
+}
