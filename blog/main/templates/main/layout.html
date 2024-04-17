@@ -11,60 +11,62 @@
 <body>
 <div class="page-container d-flex flex-column">
     <header class="bg-dark text-white p-3">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-4">
-                <img src="{% static 'main/logo.svg' %}" alt="Лого" width="64" height="64">
-            </div>
-            <div class="col-md-4 text-center">
-                <h1>Blog</h1>
-            </div>
-            <div class="col-md-4 d-flex justify-content-end align-items-center">
-                {% if user.is_authenticated %}
-                <span class="mr-2">Привет, {{ user.username }}</span>
-                <a href="{% url 'users:logout' %}" class="btn btn-secondary ml-2">
-                    <i class="fas fa-sign-out-alt"></i> Выход
-                </a>
-                {% else %}
-                <a href="{% url 'users:register' %}" class="btn btn-primary mr-2">Регистрация</a>
-                <a href="{% url 'users:login' %}" class="btn btn-secondary">Вход</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</header>
-
-<main>
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-{% if is_homepage %}8{% else %}12{% endif %}">
-                {% block content %}
-                {% endblock %}
-            </div>
-            {% if is_homepage %}
-            <div class="col-md-4">
-                {% if user.is_authenticated %}
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action" data-toggle="modal"
-                       data-target="#postModal">Создать пост</a>
-                    <a href="#" class="list-group-item list-group-item-action">Мои посты</a>
-                    <a href="#" class="list-group-item list-group-item-action">Понравившиеся</a>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4">
+                    <img src="{% static 'main/logo.svg' %}" alt="Лого" width="64" height="64">
                 </div>
+                <div class="col-md-4 text-center">
+                    <h1>Blog</h1>
+                </div>
+                <div class="col-md-4 d-flex justify-content-end align-items-center">
+                    {% if user.is_authenticated %}
+                    <span class="mr-2">Привет, {{ user.username }}</span>
+                    <a href="{% url 'users:logout' %}" class="btn btn-secondary ml-2">
+                        <i class="fas fa-sign-out-alt"></i> Выход
+                    </a>
+                    {% else %}
+                    <a href="{% url 'users:register' %}" class="btn btn-primary mr-2">Регистрация</a>
+                    <a href="{% url 'users:login' %}" class="btn btn-secondary">Вход</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-md-{% if not user.is_authenticated %}12{% elif is_homepage %}8{% else %}12{% endif %}">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+                {% if is_homepage %}
+                    {% if user.is_authenticated %}
+                    <div class="col-md-4">
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action" data-toggle="modal"
+                               data-target="#postModal">Создать пост</a>
+                            <a href="#" class="list-group-item list-group-item-action">Мои посты</a>
+                            <a href="#" class="list-group-item list-group-item-action">Понравившиеся</a>
+                        </div>
+
+                    </div>
+                    {% endif %}
                 {% endif %}
             </div>
-            {% endif %}
         </div>
-    </div>
-</main>
-<footer class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <p class="text-center text-white mb-0">Белый Алексей Ильич</p>
-        <div class="text-right">
-            <a href="https://vk.com/lhightressl" target="_blank" class="text-white mr-2"><i class="fab fa-vk fa-lg"></i></a>
-            <a href="@alesha301" target="_blank" class="text-white"><i class="fab fa-telegram fa-lg"></i></a>
+    </main>
+    <footer class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <p class="text-center text-white mb-0">Белый Алексей Ильич</p>
+            <div class="text-right">
+                <a href="https://vk.com/lhightressl" target="_blank" class="text-white mr-2"><i
+                        class="fab fa-vk fa-lg"></i></a>
+                <a href="@alesha301" target="_blank" class="text-white"><i class="fab fa-telegram fa-lg"></i></a>
+            </div>
         </div>
-    </div>
-</footer>
+    </footer>
 </div>
 
 
@@ -85,11 +87,13 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="title">Заголовок</label>
-                        <input type="text" class="form-control" id="title" name="title" placeholder="Введите заголовок поста">
+                        <input type="text" class="form-control" id="title" name="title"
+                               placeholder="Введите заголовок поста">
                     </div>
                     <div class="form-group">
                         <label for="description">Описание</label>
-                        <textarea class="form-control" id="description" name="description" rows="3" placeholder="Введите описание поста"></textarea>
+                        <textarea class="form-control" id="description" name="description" rows="3"
+                                  placeholder="Введите описание поста"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="image">Выберите изображение</label>
