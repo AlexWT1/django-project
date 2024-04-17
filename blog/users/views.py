@@ -12,7 +12,8 @@ def register(request):
             new_user = form.save()
             new_user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
             auth_login(request, new_user)
-            return redirect('post_list')  # замените '' на URL-шаблон, куда вы хотите перенаправить пользователя после входа
+            return redirect(
+                'post_list')  # замените '' на URL-шаблон, куда вы хотите перенаправить пользователя после входа
     else:
         form = CustomUserCreationForm()
     return render(request, 'users/register.html', {'form': form})

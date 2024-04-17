@@ -1,0 +1,10 @@
+<!-- post_form.html -->
+{% extends "main/layout.html" %}
+{% block create_post %}
+  <form method="post" action="{% url 'post_create' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+     {{ form.as_p }}
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="submit" class="btn btn-primary">Создать пост</button>
+</form>
+{% endblock %}

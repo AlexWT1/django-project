@@ -1,36 +1,41 @@
 {% extends "main/layout.html" %}
 
 {% block content %}
-    <div class="container mt-3">
-        <div class="row">
-            <div class="col-md-8 mx-auto">
-                <div class="card">
-                    <div class="card-body">
-                        <h1 class="card-title text-center">{{ post.title }}</h1>
-                        {% if post.image %}
-                            <img src="{{ post.image.url }}" class="card-img-top" alt="Post Image">
-                        {% endif %}
-                        <p class="card-text">{{ post.description }}</p>
-                        <div class="row justify-content-between align-items-end">
-                            <div class="col-md-4">
-                                <i class="fas fa-heart"></i> {{ post.likes.count }} &nbsp;&nbsp;
-                                <i class="fas fa-comment"></i> {{ post.comments.count }}
-                            </div>
-                            <div class="col-md-4 text-right">
-                                <p>{{ post.author }} {{ post.created_at|date:'d.m.Y H:i' }}</p>
-                            </div>
+<div class="container mt-3">
+    <div class="row">
+        <div class="{% if not is_homepage %}col-12 col-lg-12{% else %}col-12 col-lg-10{% endif %}">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h1 class="card-title text-center mb-3">{{ post.title }}</h1>
+                    {% if post.image %}
+    <div style="width: 500px; height: 400px; margin: 0 auto; display: flex; justify-content: center; align-items: center;">
+        <img src="{{ post.image.url }}" class="img-fluid rounded" alt="Post Image" style="max-width: 100%; max-height: 100%; object-fit: cover; object-position: center;">
+    </div>
+{% endif %}
+                    <p class="card-text mt-3">{{ post.description }}</p>
+                    <hr />
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <i class="fas fa-heart text-danger"></i> {{ post.likes.count }} Likes&nbsp;&nbsp;
+                            <i class="fas fa-comment text-secondary"></i> {{ post.comments.count }} Comments
+                        </div>
+                        <div class="text-muted">
+                            <small>Posted by {{ post.author }} on {{ post.created_at|date:'d.m.Y H:i' }}</small>
                         </div>
                     </div>
                 </div>
-                <h2 class="mt-4">Комментарии:</h2>
-                <ul class="list-group">
-                    {% for comment in post.comments.all %}
-                        <li class="list-group-item">{{ comment.author }}: {{ comment.text }}</li>
-                    {% empty %}
-                        <li class="list-group-item">No comments yet.</li>
-                    {% endfor %}
-                </ul>
             </div>
+            <h2 class="mt-4">Комментарии:</h2>
+            <ul class="list-group list-group-flush">
+                {% for comment in post.comments.all %}
+                    <li class="list-group-item">
+                        <strong>{{ comment.author }}:</strong> {{ comment.text }}
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">Пока нет комментариев</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
+</div>
 {% endblock %}
