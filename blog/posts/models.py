@@ -4,12 +4,7 @@ from users.models import User
 
 class PostManager(models.Manager):
     def get_posts_by_likes(self, min_likes=0):
-        """
-        Возвращает все посты с количеством лайков больше или равным указанному значению.
 
-        :param min_likes: Минимальное количество лайков для поста.
-        :return: QuerySet объектов Post.
-        """
         return self.get_queryset().filter(likes__count__gte=min_likes)
 
 
@@ -26,6 +21,9 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def is_liked_by_user(self, user):
+        return self.likes.filter(id=user.id).exists()
 
 
 class Comment(models.Model):

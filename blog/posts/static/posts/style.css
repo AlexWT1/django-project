@@ -30,3 +30,12 @@
 .post-form button[type="submit"]:hover {
     background-color: #0056b3;
 }
+
+.like-btn {
+    border: none;
+    background: transparent;
+}
+.like-btn:focus {
+    border: none;
+    outline: none;
+}
