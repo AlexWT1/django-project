@@ -1,10 +1,23 @@
 from django.db import models
+from django.http import JsonResponse
+from django.views import View
 from users.models import User
+
+
+class LikedPostsView(View):
+    def get(self, request, *args, **kwargs):
+        # Получаем текущего пользователя
+        user = request.user
+        # Получаем список постов, лайкнутых пользователем
+        liked_posts = Post.objects.filter(likes=user)
+        # Создаем список ID лайкнутых постов
+        liked_posts_ids = [post.id for post in liked_posts]
+        # Возвращаем список ID в формате JSON
+        return JsonResponse({'likedPosts': liked_posts_ids})
 
 
 class PostManager(models.Manager):
     def get_posts_by_likes(self, min_likes=0):
-
         return self.get_queryset().filter(likes__count__gte=min_likes)
 
 

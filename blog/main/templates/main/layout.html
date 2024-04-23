@@ -71,9 +71,6 @@
 </div>
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<!-- Здесь добавляем модальное окно -->
 <div id="postModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -111,61 +108,8 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function() {
-        // При нажатии на ссылку "Создать пост"
-        $('a[data-toggle="modal"]').on('click', function() {
-            var target = $(this).attr('data-target'); // Получаем цель модального окна
-            // Переходим к этой цели и открываем модальное окно
-            $(target).modal('show');
-        });
-
-        // Проверка и изменение цвета иконки сердца при загрузке страницы
-        $('.like-btn').each(function() {
-            var postId = $(this).data('post-id');
-            var isLiked = localStorage.getItem(`liked-${postId}`) === 'true';
-            var likeButton = $(this);
-            if (isLiked) {
-                likeButton.find('i').css('color', 'red'); // Лайкнутые посты красными
-            } else {
-                likeButton.find('i').css('color', 'gray'); // Нелайкнутые посты серыми
-            }
-        });
-
-        // Обработка клика по кнопке лайка
-        $('.like-btn').click(function() {
-            var postId = $(this).data('post-id');
-            var likeButton = $(this);
-            $.ajax({
-                type: 'POST',
-                url: 'posts/like_post/' + postId + '/',
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                },
-                success: function(response) {
-                    // Обновление количества лайков
-                    $('#like-count-' + postId).text(response.likes_count);
-
-                    // Обновление состояния кнопки лайка
-                    if (response.message === 'Liked') {
-                        likeButton.find('i').css('color', 'red'); // Изменение цвета на красный
-                        localStorage.setItem(`liked-${postId}`, 'true');
-                    } else {
-                        likeButton.find('i').css('color', 'gray'); // Изменение цвета на серый
-                        localStorage.setItem(`liked-${postId}`, 'false');
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    alert("Error: " + errorThrown);
-                }
-            });
-        });
-    });
-
-    function clearLocalStorage() {
-        localStorage.clear(); // Очищает все данные в localStorage
-    }
-</script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="{% static 'posts/main.js' %}"></script>
 </body>
 </html>
