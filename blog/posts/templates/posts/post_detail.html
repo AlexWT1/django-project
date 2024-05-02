@@ -22,7 +22,8 @@
                                     class="fas fa-comment text-secondary"></i> {{ post.comments.count }}</span>
                         </div>
                         <div class="text-muted">
-                            <small>Posted by {{ post.author }} on {{ post.created_at|date:'d.m.Y H:i' }}</small>
+                            <small>Posted by <span class="font-weight-bold">{{ post.author }}</span> on {{
+                                post.created_at|date:'d.m.Y H:i' }}</small>
                         </div>
                     </div>
 
@@ -46,6 +47,7 @@
                 <li class="list-group-item">Пока нет комментариев</li>
                 {% endfor %}
             </ul>
+            {% if user.is_authenticated %}
             <form method="post">
                 {% csrf_token %}
                 <div class="input-group">
@@ -53,6 +55,8 @@
                     <button type="submit" class="btn btn-primary">Отправить комментарий</button>
                 </div>
             </form>
+            {% endif %}
+
         </div>
     </div>
 </div>
