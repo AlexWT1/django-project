@@ -1,7 +1,7 @@
-// main.js
 $(document).ready(function() {
     loadLikedPosts();
     setupModal();
+    setupModalApi();
     setupLikeButton();
     checkLikedPosts();
 });
@@ -22,8 +22,6 @@ function loadLikedPosts() {
     });
 }
 
-
-
 function setupModal() {
     $('a[data-toggle="modal"]').on('click', function() {
         var target = $(this).attr('data-target');
@@ -31,9 +29,57 @@ function setupModal() {
     });
 }
 
+function setupModalApi() {
+    $('a[data-toggle="modalApi"]').on('click', function() {
+        var target = $(this).attr('data-target');
+        $(target).modal('show');
+
+        // Добавляем обработчик события отправки формы
+        $(target).find('#postForm').on('submit', function(event) {
+            event.preventDefault();
+
+            var topic = $(target).find('#postContent').val();
+
+            // Получаем CSRF токен из метаданных страницы
+            var csrftoken = $('[name=csrfmiddlewaretoken]').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/generate_text/',
+                data: {
+                    topic: topic,
+                    csrfmiddlewaretoken: csrftoken  // Добавляем CSRF токен в данные запроса
+                },
+                success: function(response) {
+                    var generatedText = response.text;
+
+                    // Показываем кнопку "Посмотреть пост"
+                    $(target).find('#viewPostBtn').show();
+
+                    // Передаем значение topic в модальное окно создания поста
+                    var postModal = $('#postModal');
+                    postModal.find('#title').val(topic);
+                    postModal.find('#description').val(generatedText); // Передаем сгенерированный текст в поле "Описание"
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Failed to generate post:', errorThrown);
+                }
+            });
+        });
+
+        // Добавляем обработчик клика на кнопку "Посмотреть пост"
+        $(target).find('#viewPostBtn').on('click', function() {
+            var postModal = $('#postModal');
+            postModal.modal('show');
+            $(target).modal('hide'); // Закрываем модальное окно с формой для генерации текста
+        });
+    });
+}
+
+
+
 
 function setupLikeButton() {
-
     $('.like-btn').click(function() {
         var postId = $(this).data('post-id');
         var likeButton = $(this);

@@ -87,6 +87,7 @@ def like_post(request, post_id):
     return JsonResponse({"message": message, "likes_count": post.likes.all().count()})
 
 
+@login_required
 def liked_posts(request):
     liked_posts = Post.objects.filter(likes=request.user).order_by('-created_at')
     return render(request, 'posts/liked_posts.html', {'posts': liked_posts, 'is_homepage': True})
