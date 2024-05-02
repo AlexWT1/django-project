@@ -31,13 +31,15 @@ function setupModal() {
     });
 }
 
+
 function setupLikeButton() {
+
     $('.like-btn').click(function() {
         var postId = $(this).data('post-id');
         var likeButton = $(this);
         $.ajax({
             type: 'POST',
-            url: 'posts/like_post/' + postId + '/',
+            url: '/posts/like_post/' + postId + '/',
             data: {
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
