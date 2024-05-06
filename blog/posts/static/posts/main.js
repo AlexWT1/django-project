@@ -9,10 +9,10 @@ $(document).ready(function() {
 function updateFileName(input) {
     if (input.files && input.files[0]) {
         var fileName = input.files[0].name;
-        document.getElementById('selectedFile').style.display = 'block'; // Показываем элемент
-        document.getElementById('selectedFile').innerText = 'Выбрано: ' + fileName; // Обновляем текст
+        document.getElementById('selectedFile').style.display = 'block';
+        document.getElementById('selectedFile').innerText = 'Выбрано: ' + fileName;
     } else {
-        document.getElementById('selectedFile').style.display = 'none'; // Скрываем элемент
+        document.getElementById('selectedFile').style.display = 'none';
     }
 }
 
@@ -44,13 +44,11 @@ function setupModalApi() {
         var target = $(this).attr('data-target');
         $(target).modal('show');
 
-        // Добавляем обработчик события отправки формы
         $(target).find('#postForm').on('submit', function(event) {
             event.preventDefault();
 
             var topic = $(target).find('#postContent').val();
 
-            // Получаем CSRF токен из метаданных страницы
             var csrftoken = $('[name=csrfmiddlewaretoken]').val();
 
             $.ajax({
@@ -58,18 +56,16 @@ function setupModalApi() {
                 url: '/api/generate_text/',
                 data: {
                     topic: topic,
-                    csrfmiddlewaretoken: csrftoken  // Добавляем CSRF токен в данные запроса
+                    csrfmiddlewaretoken: csrftoken
                 },
                 success: function(response) {
                     var generatedText = response.text;
 
-                    // Показываем кнопку "Посмотреть пост"
                     $(target).find('#viewPostBtn').show();
 
-                    // Передаем значение topic в модальное окно создания поста
                     var postModal = $('#postModal');
                     postModal.find('#title').val(topic);
-                    postModal.find('#description').val(generatedText); // Передаем сгенерированный текст в поле "Описание"
+                    postModal.find('#description').val(generatedText);
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.error('Failed to generate post:', errorThrown);
@@ -77,11 +73,10 @@ function setupModalApi() {
             });
         });
 
-        // Добавляем обработчик клика на кнопку "Посмотреть пост"
         $(target).find('#viewPostBtn').on('click', function() {
             var postModal = $('#postModal');
             postModal.modal('show');
-            $(target).modal('hide'); // Закрываем модальное окно с формой для генерации текста
+            $(target).modal('hide');
         });
     });
 }
