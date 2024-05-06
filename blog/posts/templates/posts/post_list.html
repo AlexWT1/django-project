@@ -22,6 +22,11 @@
                             </button>
                             &nbsp;&nbsp;
                             <i class="fas fa-comment"></i> {{ post.comments.all.count }}
+                            &nbsp;&nbsp;
+                            <!-- Добавляем иконку удаления -->
+                            <a href="{% url 'delete_post' post.id %}" class="delete-post-link">
+                                <i class="fas fa-trash"></i>
+                            </a>
                         </div>
                     </div>
                 </div>

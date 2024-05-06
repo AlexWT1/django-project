@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib import messages
 from .forms import CommentForm, PostForm
 from .models import Post, Comment
 from django.contrib.auth.decorators import login_required
@@ -73,6 +73,23 @@ def create_post(request):
         form = PostForm()  # Создаем пустую форму для GET запроса
     return render(request, 'main/layout.html', {'form': form})
 
+
+@login_required
+def post_delete(request, post_id):
+    try:
+        post = get_object_or_404(Post, id=post_id)
+        if request.user != post.author:
+            # Если пользователь не автор поста, добавляем сообщение об ошибке
+            messages.error(request, 'Нельзя удалить чужой пост.')
+            return redirect('post_list')
+        post.delete()
+        # Если пост успешно удален, добавляем сообщение об успехе
+        messages.success(request, 'Пост успешно удален')
+        return redirect('post_list')
+    except Http404:
+        # Если пост не найден, добавляем сообщение об ошибке
+        messages.error(request, 'Пост не найден')
+        return redirect('post_list')
 
 @login_required
 @csrf_exempt

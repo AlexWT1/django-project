@@ -49,19 +49,29 @@
                 </div>
                 {% if is_homepage %}
                 {% if user.is_authenticated %}
-                <div class="col-md-4 ">
+                <div class="col-md-4">
                     <div class="list-group">
-                        <a href="{% url 'post_list' %}" class="list-group-item list-group-item-action">Все посты</a>
-                        <a href="{% url 'my_posts' %}" class="list-group-item list-group-item-action">Мои посты</a>
-                        <a href="{% url 'liked_posts' %}"
-                           class="list-group-item list-group-item-action">Понравившиеся</a>
+                        <a href="{% url 'post_list' %}" class="list-group-item list-group-item-action"
+                           aria-label="Все посты">
+                            <i class="fas fa-list"></i> Все посты
+                        </a>
+                        <a href="{% url 'my_posts' %}" class="list-group-item list-group-item-action"
+                           aria-label="Мои посты">
+                            <i class="fas fa-user"></i> Мои посты
+                        </a>
+                        <a href="{% url 'liked_posts' %}" class="list-group-item list-group-item-action"
+                           aria-label="Понравившиеся">
+                            <i class="fas fa-heart"></i> Понравившиеся
+                        </a>
                         <a href="#" class="list-group-item list-group-item-action" data-toggle="modal"
-                           data-target="#postModal">Создать пост</a>
+                           data-target="#postModal" aria-label="Создать пост">
+                            <i class="fas fa-plus"></i> Создать пост
+                        </a>
                         <a href="#" class="list-group-item list-group-item-action" data-toggle="modalApi"
-                           data-target="#postModalApi">Сгенерировать пост</a>
-
+                           data-target="#postModalApi" aria-label="Сгенерировать пост">
+                            <i class="fas fa-random"></i> Сгенерировать пост
+                        </a>
                     </div>
-
                 </div>
                 {% endif %}
                 {% endif %}
@@ -81,90 +91,45 @@
 </div>
 
 
-<div id="postModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Создать новый пост</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="{% url 'post_create' %}" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="title">Заголовок</label>
-                        <input type="text" class="form-control" id="title" name="title"
-                               placeholder="Введите заголовок поста">
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Описание</label>
-                        <textarea class="form-control" id="description" name="description" rows="3"
-                                  placeholder="Введите описание поста"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="image">Выберите изображение</label>
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="image" name="image"
-                                   onchange="updateFileName(this)">
-                            <label class="custom-file-label" for="image">Выберите файл</label>
-                        </div>
-                        <p id="selectedFile" style="display:none;"></p>
-                        <!-- Элемент для отображения информации о файле -->
-                    </div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button type="submit" class="btn btn-primary">Создать пост</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Popup форма -->
-<div class="modal fade" id="postModalApi" tabindex="-1" role="dialog" aria-labelledby="postModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="postModalLabel">Сгенерировать пост</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="postForm">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="postContent">Про что будет пост?</label>
-                        <textarea class="form-control mb-3" id="postContent" rows="3"
-                                  placeholder="Введите заголовок поста..."></textarea>
-                        <div class="d-inline">
-
-                            <button type="submit" class="btn btn-primary mr-2">Сгенерировать</button>
-                            <button id="viewPostBtn" class="btn btn-primary" style="display: none;">Посмотреть пост
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="{% static 'posts/main.js' %}"></script>
 <script>
-    function updateFileName(input) {
-        if (input.files && input.files[0]) {
-            var fileName = input.files[0].name;
-            document.getElementById('selectedFile').style.display = 'block'; // Показываем элемент
-            document.getElementById('selectedFile').innerText = 'Выбрано: ' + fileName; // Обновляем текст
-        } else {
-            document.getElementById('selectedFile').style.display = 'none'; // Скрываем элемент
-        }
-    }
+    document.addEventListener("DOMContentLoaded", function() {
+        // Загрузка модального окна postModal
+        fetch('{% url "post_modal" %}')
+           .then(response => response.text())
+           .then(html => {
+                document.body.insertAdjacentHTML('beforeend', html);
+            });
+
+        // Загрузка модального окна postModalApi
+        fetch('{% url "post_modal_api" %}')
+           .then(response => response.text())
+           .then(html => {
+                document.body.insertAdjacentHTML('beforeend', html);
+            });
+
+        // Загрузка модального окна notificationModal
+        fetch('{% url "notification_modal" %}')
+           .then(response => response.text())
+           .then(html => {
+                document.body.insertAdjacentHTML('beforeend', html);
+            });
+    });
 </script>
+{% if messages %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for message in messages %}
+            // Вставляем сообщение в модальное окно
+            document.querySelector('#notificationModal .modal-body').innerHTML = "{{ message }}";
+            // Показываем модальное окно
+            $('#notificationModal').modal('show');
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
 </body>
 </html>

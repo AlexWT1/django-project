@@ -6,6 +6,7 @@ from .views import DeleteCommentView
 urlpatterns = [
     path('post/<int:pk>/', views.post_detail, name='post_detail'),
     path('create/', views.create_post, name='post_create'),
+    path('delete_post/<int:post_id>/', views.post_delete, name='delete_post'),
     path('like_post/<int:post_id>/', views.like_post, name='like_post'),
     path('liked_posts/', LikedPostsView.as_view(), name='liked_posts'),
     path('delete_comment/<int:comment_id>/', DeleteCommentView.as_view(), name='delete_comment'),

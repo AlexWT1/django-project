@@ -38,7 +38,7 @@ def generate_text(request):
                 },
                 {
                     "role": "user",
-                    "text": f"Привет, напиши пост тему: {topic}"
+                    "text": f"Привет, напиши пост на тему: {topic}"
                 }
             ]
         }

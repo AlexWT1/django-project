@@ -6,6 +6,16 @@ $(document).ready(function() {
     checkLikedPosts();
 });
 
+function updateFileName(input) {
+    if (input.files && input.files[0]) {
+        var fileName = input.files[0].name;
+        document.getElementById('selectedFile').style.display = 'block'; // Показываем элемент
+        document.getElementById('selectedFile').innerText = 'Выбрано: ' + fileName; // Обновляем текст
+    } else {
+        document.getElementById('selectedFile').style.display = 'none'; // Скрываем элемент
+    }
+}
+
 function loadLikedPosts() {
     $.ajax({
         type: 'GET',
@@ -99,6 +109,8 @@ function setupLikeButton() {
         });
     });
 }
+
+
 
 function checkLikedPosts() {
     $('.like-btn').each(function() {
